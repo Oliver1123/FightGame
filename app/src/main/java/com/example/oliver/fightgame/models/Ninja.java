@@ -10,25 +10,33 @@ import com.example.oliver.fightgame.RandomValue;
 public class Ninja extends Unit {
     // chance to evasion enemy attack
     private int mEvasionChance;
-    public Ninja(String name, int hp, int strength, int evasion) {
-        super(name, hp, strength);
+    public Ninja(String name, int hp, int strength, int mana, int evasion) {
+        super(name, hp, strength, mana);
         mEvasionChance = evasion;
     }
 
 
     @Override
-    public void getDamage(int strength) {
+    public String getDamage(int damage) {
+        String result = "";
         // Calculate if unit can avoid strike
         int evasion = (RandomValue.nextInt() % 100 < mEvasionChance) ? 0 : 1;
-        if (evasion == 0 )
-            Log.d("tag", getName() + " avoid attack!");
-        super.getDamage(strength * evasion);
+        if (evasion == 0 ) {
+            result += getClass().getSimpleName() + " " + getName() + " avoid attack! ";
+        }else {
+            result += super.getDamage(damage * evasion);
+        }
+        return result;
     }
 
     @Override
-    public void attackEnemy(Unit enemy) {
-        super.attackEnemy(enemy);
-        enemy.getDamage(this.hit());
+    public String attackEnemy(Unit enemy) {
+        return  super.attackEnemy(enemy) + " " + enemy.getDamage(this.hit());
+    }
+
+    @Override
+    public String counterAttack(Unit enemy) {
+        return super.counterAttack(enemy) + " " + enemy.getDamage(this.hit() / 2);
     }
 
     @Override

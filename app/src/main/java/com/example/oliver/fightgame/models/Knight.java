@@ -7,20 +7,24 @@ package com.example.oliver.fightgame.models;
 public class Knight extends Unit {
     private  int mArmor;
 
-    public Knight(String name, int hp, int strength, int armor) {
-        super(name, hp, strength);
+    public Knight(String name, int hp, int strength, int mana, int armor) {
+        super(name, hp, strength, mana);
         mArmor = armor;
     }
 
     @Override
-    public void getDamage(int strength) {
-        super.getDamage(strength - mArmor);
+    public String getDamage(int damage) {
+       return super.getDamage(damage - mArmor);
     }
 
     @Override
-    public void attackEnemy(Unit enemy) {
-        super.attackEnemy(enemy);
-        enemy.getDamage(this.hit());
+    public String attackEnemy(Unit enemy) {
+        return super.attackEnemy(enemy) + " " + enemy.getDamage(this.hit());
+    }
+
+    @Override
+    public String counterAttack(Unit enemy) {
+        return super.counterAttack(enemy) + " " + enemy.getDamage(this.hit() / 2);
     }
 
     @Override

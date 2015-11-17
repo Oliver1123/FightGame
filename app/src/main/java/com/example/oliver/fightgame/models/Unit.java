@@ -1,11 +1,8 @@
 package com.example.oliver.fightgame.models;
 
 import android.util.Log;
-import android.util.Pair;
 
 import com.example.oliver.fightgame.RandomValue;
-
-import java.util.Random;
 
 /**
  * Created by oliver on 16.11.15.
@@ -14,55 +11,54 @@ public  class Unit {
     private String mName;
     private int mMaxHealth;
     private int mCurrentHealth;
-    private int mStrength;
+    private int mStrength; // relate to hit power
+    private int mMana; // relate to heal power
     private boolean isDead;
 
 
-    public Unit(String name, int hp, int strength) {
+    public Unit(String name, int hp, int strength, int mana) {
         mName = name;
         mMaxHealth = hp;
         mCurrentHealth = hp;
         mStrength = strength;
+        mMana = mana;
     }
-    public void getDamage(int strength) {
-        if (this.mCurrentHealth > strength) {
-            this.mCurrentHealth -= strength;
-            Log.d("tag", getClass().getSimpleName() + " " + mName + " lose " + strength + "hp, " + mCurrentHealth + "hp left.");
+
+    public String getDamage(int damage) {
+        String result;
+        if (this.mCurrentHealth > damage) {
+            this.mCurrentHealth -= damage;
+            result =  getClass().getSimpleName() + " " + mName + " lose " + damage + "hp, " + mCurrentHealth + "hp left. ";
         } else {
-            Log.d("tag", getClass().getSimpleName() + " " + mName + " lose " + mCurrentHealth + "hp, 0hp left. " + mName + " is dead.");
+            result = getClass().getSimpleName() + " " + mName + " lose " + mCurrentHealth + "hp. " + mName + " is dead. ";
             this.mCurrentHealth = 0;
             this.isDead = true;
         }
-
+       return result;
     }
 
-    public void attackEnemy(Unit enemy){
-        Log.d("tag", getClass().getSimpleName() +" " + mName + " attack " + enemy.getName());
+    public String attackEnemy(Unit enemy){
+        return  getClass().getSimpleName() + " " + mName + " attack " + enemy.getName()+ ". ";
+    }
+
+    public String counterAttack(Unit enemy){
+        return  getClass().getSimpleName() + " " + mName + " counterattack " + enemy.getName()+ ". ";
     }
 
     /**
-     * Heal 0%-10% from max health
+     * Heal  (mana +/- random[0; mana/4)) hp
      */
-    public void heal() {
-        int health = RandomValue.nextInt((int) (mMaxHealth * 0.1));
-        heal(health);
+    public String heal() {
+        int sign = (RandomValue.nextInt() % 2 == 0) ? 1 : -1;
+        int divergence = RandomValue.nextInt((int) (mMana * 0.25));
+        Log.d("tag", "heal divergence: " + divergence);
+        return heal(mMana + sign * divergence);
     }
 
-    public void heal(int health) {
-        if (mCurrentHealth + health < mMaxHealth) {
-            Log.d("tag", getClass().getSimpleName() + " heal " + health + "hp.");
-        } else {
-            Log.d("tag", getClass().getSimpleName() + " heal " + (mMaxHealth - mCurrentHealth) + "hp.");
-            mCurrentHealth = mMaxHealth;
-        }
-    }
-
-    public int getHP(){
-        return mCurrentHealth;
-    }
-
-    public int getStrength() {
-        return mStrength;
+    public String heal(int health) {
+        int healHP = (mCurrentHealth + health < mMaxHealth) ? health : mMaxHealth - mCurrentHealth;
+        mCurrentHealth += healHP;
+        return getClass().getSimpleName() + " " + mName+  " heal " + healHP + "hp, " + mCurrentHealth + "hp left. ";
     }
 
     public boolean isDead() {
@@ -78,8 +74,9 @@ public  class Unit {
      */
     public int hit() {
         int sign = (RandomValue.nextInt() % 2 == 0) ? 1 : -1;
-        int divergence = RandomValue.nextInt((int) (getStrength() * 0.25));
-        return (getStrength() + sign * divergence);
+        int divergence = RandomValue.nextInt((int) (mStrength * 0.25));
+        Log.d("tag", "hit divergence: " + divergence);
+        return (mStrength + sign * divergence);
     }
 
     @Override
@@ -111,8 +108,8 @@ public  class Unit {
     public String toString() {
         return getClass().getSimpleName() +
                 " name: '" + mName + '\'' +
-                ", maxHP: " + mMaxHealth +
                 ", hp: " + mCurrentHealth +
-                ", strength: " + mStrength;
+                ", strength: " + mStrength +
+                ", mana: " + mMana;
     }
 }

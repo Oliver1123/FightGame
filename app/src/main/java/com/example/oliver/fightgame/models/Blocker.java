@@ -10,22 +10,28 @@ public class Blocker extends Unit {
 //    Can block mBlock percent of damage
     private int mBlock;
 
-    public Blocker(String name, int hp, int strength, int block) {
-        super(name, hp, strength);
+    public Blocker(String name, int hp, int strength, int mana, int block) {
+        super(name, hp, strength,mana);
         mBlock = block;
     }
 
     @Override
-    public void getDamage(int strength) {
-        int blockedDamage = strength / 100 * mBlock;
-        Log.d("tag", getName() + " blocked " + blockedDamage + "damage!");
-        super.getDamage(strength - blockedDamage);
+    public String getDamage(int damage) {
+        String result = "";
+        int blockedDamage = (int) (damage * (mBlock / (float) 100));
+        result += getClass().getSimpleName() + " " +  getName() + " blocked " + blockedDamage + "damage! ";
+        result += super.getDamage(damage - blockedDamage);
+        return result;
     }
 
     @Override
-    public void attackEnemy(Unit enemy) {
-        super.attackEnemy(enemy);
-        enemy.getDamage(this.hit());
+    public String attackEnemy(Unit enemy) {
+        return super.attackEnemy(enemy) + " " + enemy.getDamage(this.hit());
+    }
+
+    @Override
+    public String counterAttack(Unit enemy) {
+        return super.counterAttack(enemy) + " " + enemy.getDamage(this.hit() / 2);
     }
 
     @Override

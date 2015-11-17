@@ -12,27 +12,33 @@ public class BladeMaster extends Unit {
     // Critical Strike chance
     private int mCriticalStrike;
 
-    public BladeMaster(String name, int hp, int strength, int criticalStrike) {
-        super(name, hp, strength);
+    public BladeMaster(String name, int hp, int strength, int mana, int criticalStrike) {
+        super(name, hp, strength, mana);
         mCriticalStrike = criticalStrike;
     }
 
     @Override
-    public void getDamage(int strength) {
-        super.getDamage(strength);
+    public String  getDamage(int damage) {
+        return super.getDamage(damage);
     }
 
     @Override
-    public void attackEnemy(Unit enemy) {
+    public String attackEnemy(Unit enemy) {
+        String result =  super.attackEnemy(enemy);
         int hit = this.hit();
         boolean doubleStrike = RandomValue.nextInt() % 100 < mCriticalStrike;
         if (doubleStrike) {
-            Log.d("tag", "Double Strike!");
-            enemy.getDamage(2 * hit);
+            result += " Double Strike!";
+            result += enemy.getDamage(2 * hit);
         } else {
-            enemy.getDamage(hit);
+            result += enemy.getDamage(hit);
         }
-        super.attackEnemy(enemy);
+       return result;
+    }
+
+    @Override
+    public String counterAttack(Unit enemy) {
+        return super.counterAttack(enemy) + " " + enemy.getDamage(hit() / 2);
     }
 
     @Override
