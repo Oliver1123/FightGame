@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="names">
+        <item>Maximus</item>
+        <item>Ekon</item>
+        <item>Hagan</item>
+        <item>Jedrek</item>
+        <item>Jerry</item>
+        <item>Kalmin</item>
+        <item>Kwan</item>
+        <item>Magnar</item>
+        <item>Mann</item>
+        <item>Neron</item>
+        <item>Remo</item>
+        <item>Takeo</item>
+        <item>Takeshi</item>
+    </string-array>
+</resources>
