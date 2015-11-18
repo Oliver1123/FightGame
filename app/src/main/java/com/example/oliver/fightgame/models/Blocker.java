@@ -1,24 +1,22 @@
 package com.example.oliver.fightgame.models;
 
-import android.util.Log;
-
 /**
  * Created by oliver on 16.11.15.
- *
+ * unit can block [blockPercent]% of damage
  */
 public class Blocker extends Unit {
-//    Can block mBlock percent of damage
-    private int mBlock;
+//    Can block mBlockPercent percent of damage
+    private int mBlockPercent;
 
-    public Blocker(String name, int hp, int strength, int mana, int block) {
+    public Blocker(String name, int hp, int strength, int mana, int blockPercent) {
         super(name, hp, strength,mana);
-        mBlock = block;
+        mBlockPercent = blockPercent;
     }
 
     @Override
     public String getDamage(int damage) {
         String result = "";
-        int blockedDamage = (int) (damage * (mBlock / (float) 100));
+        int blockedDamage = (int) (damage * (mBlockPercent / (float) 100));
         result += getClass().getSimpleName() + " " +  getName() + " blocked " + blockedDamage + "damage! ";
         result += super.getDamage(damage - blockedDamage);
         return result;
@@ -36,6 +34,6 @@ public class Blocker extends Unit {
 
     @Override
     public String toString() {
-        return super.toString() + ", block: " + mBlock + "%";
+        return super.toString() + ", block: " + mBlockPercent + "%";
     }
 }

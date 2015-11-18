@@ -1,7 +1,6 @@
 package com.example.oliver.fightgame;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.example.oliver.fightgame.models.Unit;
@@ -39,9 +38,13 @@ public class TournamentTask extends AsyncTask<Void, String, Void> {
 
             for (Unit fighter : mLiveFighters) {
                 if (!fighter.isDead()) {
-                    Unit target = getEnemy(fighter);
+                    Unit target = getEnemy(fighter, mLiveFighters);
+                    if (target == null) break;
                     publishProgress(fighter.attackEnemy(target));
-                    publishProgress(fighter.heal());
+                    publishProgress(fighter.regenerate());
+                    if (!target.isDead()) {
+                        publishProgress(target.counterAttack(fighter));
+                    }
                     try {
                         TimeUnit.MILLISECONDS.sleep(PAUSE_MILLISECONDS);
                     } catch (InterruptedException e) {
@@ -83,15 +86,21 @@ public class TournamentTask extends AsyncTask<Void, String, Void> {
     }
 
     /**
-     * Find enemy for unit among alive units
-     * @param unit fighter who need an enemy
-     * @return enemy for given fighter
+     * Find enemy for fighter among list of enemies
+     * @param fighter fighter who need an enemy
+     * @param enemies units who may be enemy
+     * @return enemy for given fighter or null otherwise
      */
-    private Unit getEnemy(Unit unit) {
-        Unit enemy;
-        do {
-            enemy = mLiveFighters.get(RandomValue.nextInt(mLiveFighters.size()));
-        } while (unit.equals(enemy) || enemy.isDead());
-        return enemy;
+    private Unit getEnemy(Unit fighter, List<Unit> enemies) {
+        List<Unit> potentialEnemies = new ArrayList<>();
+        for (Unit unit : enemies) {
+            if (!unit.isDead() && !unit.equals(fighter))
+                potentialEnemies.add(unit);
+        }
+        if (potentialEnemies.size() > 0) {
+            return potentialEnemies.get(RandomValue.nextInt(potentialEnemies.size()));
+        }else {
+            return null;
+        }
     }
 }

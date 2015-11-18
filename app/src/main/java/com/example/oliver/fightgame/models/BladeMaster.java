@@ -28,7 +28,7 @@ public class BladeMaster extends Unit {
         int hit = this.hit();
         boolean doubleStrike = RandomValue.nextInt() % 100 < mCriticalStrike;
         if (doubleStrike) {
-            result += " Double Strike!";
+            result += " Double Strike! ";
             result += enemy.getDamage(2 * hit);
         } else {
             result += enemy.getDamage(hit);

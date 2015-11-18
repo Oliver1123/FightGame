@@ -7,12 +7,12 @@ import com.example.oliver.fightgame.RandomValue;
 /**
  * Created by oliver on 16.11.15.
  */
-public  class Unit {
+public abstract class Unit {
     private String mName;
     private int mMaxHealth;
     private int mCurrentHealth;
     private int mStrength; // relate to hit power
-    private int mMana; // relate to heal power
+    private int mMana; // relate to regenerate power
     private boolean isDead;
 
 
@@ -25,12 +25,14 @@ public  class Unit {
     }
 
     public String getDamage(int damage) {
+        if (isDead) return getClass().getSimpleName() + " " + mName + " is dead. ";
+
         String result;
         if (this.mCurrentHealth > damage) {
             this.mCurrentHealth -= damage;
             result =  getClass().getSimpleName() + " " + mName + " lose " + damage + "hp, " + mCurrentHealth + "hp left. ";
         } else {
-            result = getClass().getSimpleName() + " " + mName + " lose " + mCurrentHealth + "hp. " + mName + " is dead. ";
+            result = getClass().getSimpleName() + " " + mName + " lose " + mCurrentHealth + "hp. " + mName + " is DEAD. ";
             this.mCurrentHealth = 0;
             this.isDead = true;
         }
@@ -38,7 +40,7 @@ public  class Unit {
     }
 
     public String attackEnemy(Unit enemy){
-        return  getClass().getSimpleName() + " " + mName + " attack " + enemy.getName()+ ". ";
+        return  getClass().getSimpleName() + " " + mName + " attack " + enemy.getName() + ". ";
     }
 
     public String counterAttack(Unit enemy){
@@ -48,14 +50,15 @@ public  class Unit {
     /**
      * Heal  (mana +/- random[0; mana/4)) hp
      */
-    public String heal() {
+    public String regenerate() {
+        if (isDead) return getClass().getSimpleName() + " " + mName + " is dead. ";
+
         int sign = (RandomValue.nextInt() % 2 == 0) ? 1 : -1;
         int divergence = RandomValue.nextInt((int) (mMana * 0.25));
-        Log.d("tag", "heal divergence: " + divergence);
         return heal(mMana + sign * divergence);
     }
 
-    public String heal(int health) {
+    protected String heal(int health) {
         int healHP = (mCurrentHealth + health < mMaxHealth) ? health : mMaxHealth - mCurrentHealth;
         mCurrentHealth += healHP;
         return getClass().getSimpleName() + " " + mName+  " heal " + healHP + "hp, " + mCurrentHealth + "hp left. ";
@@ -67,6 +70,13 @@ public  class Unit {
     public String getName() {
         return mName;
     }
+    public int getHP() {
+        return mCurrentHealth;
+    }
+
+    public int getMaxHP() {
+        return mMaxHealth;
+    }
 
     /** Calculate hit power = strength +/- random[0; strength/4)
      *
@@ -75,7 +85,6 @@ public  class Unit {
     public int hit() {
         int sign = (RandomValue.nextInt() % 2 == 0) ? 1 : -1;
         int divergence = RandomValue.nextInt((int) (mStrength * 0.25));
-        Log.d("tag", "hit divergence: " + divergence);
         return (mStrength + sign * divergence);
     }
 

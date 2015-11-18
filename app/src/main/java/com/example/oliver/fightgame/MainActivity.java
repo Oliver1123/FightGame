@@ -54,11 +54,16 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < fightersCount; i++) {
                     fighters.add(UnitFactory.getRandomUnit(mNames[i % mNames.length], 1000, 200, 50));
                 }
+                if (mTournament != null) mTournament.cancel(true);
                 mTournament = new TournamentTask(fighters, mLog);
                 mTournament.execute();
             }
         });
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mTournament != null) mTournament.cancel(true);
+    }
 }
