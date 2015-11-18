@@ -1,7 +1,5 @@
 package com.example.oliver.fightgame.models;
 
-import android.util.Log;
-
 import com.example.oliver.fightgame.RandomValue;
 
 /**
@@ -18,15 +16,10 @@ public class Ninja extends Unit {
 
     @Override
     public String getDamage(int damage) {
-        String result = "";
         // Calculate if unit can avoid strike
-        int evasion = (RandomValue.nextInt() % 100 < mEvasionChance) ? 0 : 1;
-        if (evasion == 0 ) {
-            result += getClass().getSimpleName() + " " + getName() + " avoid attack! ";
-        }else {
-            result += super.getDamage(damage * evasion);
-        }
-        return result;
+        boolean avoidAttack = (RandomValue.nextInt() % 100 < mEvasionChance);
+        return  avoidAttack ? getClass().getSimpleName() + " " + getName() + " avoid attack! " :
+                              super.getDamage(damage);
     }
 
     @Override

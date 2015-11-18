@@ -25,6 +25,7 @@ public class TournamentTask extends AsyncTask<Void, String, Void> {
     }
     @Override
     protected Void doInBackground(Void... params) {
+        long startTime = System.currentTimeMillis();
         // reanimate all units =)
         mLiveFighters = new ArrayList<>(mFighters.size());
         for (Unit unit : mFighters) {
@@ -57,14 +58,9 @@ public class TournamentTask extends AsyncTask<Void, String, Void> {
 
         Unit winner = mLiveFighters.get(0);
         publishProgress(winner.getClass().getSimpleName() + " " + winner.getName() + " win the battle!!!");
-
+        long endTime = System.currentTimeMillis();
+        publishProgress("Duration of the battle is " + (endTime - startTime) + "ms");
         return null;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        mLog.get().setText("");
     }
 
     @Override

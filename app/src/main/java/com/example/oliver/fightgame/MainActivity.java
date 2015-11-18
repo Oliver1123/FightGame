@@ -1,6 +1,7 @@
 package com.example.oliver.fightgame;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -12,7 +13,7 @@ import com.example.oliver.fightgame.models.Unit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private TextView mLog;
     private TournamentTask mTournament;
     private SeekBar mFightersCount;
@@ -26,10 +27,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        final TextView progressText = (TextView) findViewById(R.id.tvProgress);
+        final TextView progressText = (TextView) findViewById(R.id.tvFightersCount);
         mLog = (TextView) findViewById(R.id.tvLog);
         mLog.setMovementMethod(new ScrollingMovementMethod());
-        mFightersCount = ((SeekBar)findViewById(R.id.fightersCount));
+        mFightersCount = ((SeekBar)findViewById(R.id.sbFightersCount));
         mFightersCount.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.startBattle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mLog.setText("New Battle Began!");
 
                 int fightersCount = mFightersCount.getProgress() + 2;
                 List<Unit> fighters = new ArrayList<>();
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (mTournament != null) mTournament.cancel(true);
                 mTournament = new TournamentTask(fighters, mLog);
-                mTournament.execute();
+                mTournament.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
     }
