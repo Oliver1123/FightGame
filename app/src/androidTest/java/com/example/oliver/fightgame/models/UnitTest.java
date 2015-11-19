@@ -1,13 +1,13 @@
 package com.example.oliver.fightgame.models;
 
-import android.test.AndroidTestCase;
-
 import com.example.oliver.fightgame.UnitFactory;
+
+import junit.framework.TestCase;
 
 /**
  * Created by oliver on 17.11.15.
  */
-public class UnitTest extends AndroidTestCase {
+public class UnitTest extends TestCase {
     private static String UNIT_NAME     = "unit_name";
     private static int UNIT_HP          = 100;
     private static int UNIT_STRENGTH    = 100;

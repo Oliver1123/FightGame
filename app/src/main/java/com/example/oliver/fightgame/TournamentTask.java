@@ -12,11 +12,12 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by oliver on 17.11.15.
+ * Class get a list of Unit and TextView for logging as an input parameters,
+ * and can show fight between that units.
  */
 public class TournamentTask extends AsyncTask<Void, String, Void> {
     private static final int PAUSE_MILLISECONDS = 1000;
-    private List<Unit> mFighters, mLiveFighters;
+    private final List<Unit> mFighters;
     private WeakReference<TextView> mLog;
 
     public TournamentTask(List<Unit> fighters, TextView log) {
@@ -25,21 +26,16 @@ public class TournamentTask extends AsyncTask<Void, String, Void> {
     }
     @Override
     protected Void doInBackground(Void... params) {
-        long startTime = System.currentTimeMillis();
         // reanimate all units =)
-        mLiveFighters = new ArrayList<>(mFighters.size());
-        for (Unit unit : mFighters) {
-            publishProgress(unit.toString());
-            mLiveFighters.add(unit);
-        }
+        List<Unit> liveFighter = copyFighters(mFighters);
 
         int roundCount = 1;
-        while (mLiveFighters.size() > 1) {
+        while (liveFighter.size() > 1) {
             publishProgress("\n == Round " + roundCount++ + " began! == ");
 
-            for (Unit fighter : mLiveFighters) {
+            for (Unit fighter : liveFighter) {
                 if (!fighter.isDead()) {
-                    Unit target = getEnemy(fighter, mLiveFighters);
+                    Unit target = getEnemy(fighter, liveFighter);
                     if (target == null) break;
                     publishProgress(fighter.attackEnemy(target));
                     publishProgress(fighter.regenerate());
@@ -53,13 +49,11 @@ public class TournamentTask extends AsyncTask<Void, String, Void> {
                     }
                 }
             }
-            takeAwayDeadBodies();
+            takeAwayDeadBodies(liveFighter);
         }
 
-        Unit winner = mLiveFighters.get(0);
+        Unit winner = liveFighter.get(0);
         publishProgress(winner.getClass().getSimpleName() + " " + winner.getName() + " win the battle!!!");
-        long endTime = System.currentTimeMillis();
-        publishProgress("Duration of the battle is " + (endTime - startTime) + "ms");
         return null;
     }
 
@@ -71,8 +65,28 @@ public class TournamentTask extends AsyncTask<Void, String, Void> {
         mLog.get().setText(currentProgress + "\n" + values[0]);
     }
 
-    private void takeAwayDeadBodies() {
-        Iterator<Unit> iterator = mLiveFighters.iterator();
+    /**
+     * Create copy of list of fighters
+     * @param _fighters list of fighters
+     * @return copy of given list
+     */
+    private List<Unit> copyFighters(List<Unit> _fighters) {
+        if (_fighters == null) return null;
+
+        List<Unit> result = new ArrayList<>(mFighters.size());
+        for (Unit unit : mFighters) {
+            publishProgress(unit.toString());
+            result.add(unit);
+        }
+        return  result;
+    }
+
+    /**
+     * Remove dead unit from fighters list
+     * @param _fighters list of fighters
+     */
+    private void takeAwayDeadBodies(List<Unit> _fighters) {
+        Iterator<Unit> iterator = _fighters.iterator();
         while (iterator.hasNext()) {
             Unit unit = iterator.next();
             if (unit.isDead()) {

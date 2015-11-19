@@ -1,27 +1,26 @@
 package com.example.oliver.fightgame.models;
 
 /**
- * Created by oliver on 16.11.15.
- * Unit that make double damage but also get double damage
+ * Berserk unit that make double damage but also get double damage.
  */
 
 public class Berserk extends Unit {
-    public Berserk(String name, int hp, int strength, int mana) {
-        super(name, hp, strength, mana);
+    public Berserk(String _name, int _hp, int _strength, int _mana) {
+        super(_name, _hp, _strength, _mana);
     }
 
     @Override
-    public String getDamage(int damage) {
-        return super.getDamage(2 * damage);
+    public String getDamage(int _damage) {
+        return super.getDamage(2 * _damage);
     }
 
     @Override
-    public String  attackEnemy(Unit enemy) {
-        return super.attackEnemy(enemy) + " " + enemy.getDamage(2 * this.hit());
+    public String  attackEnemy(Unit _enemy) {
+        return super.attackEnemy(_enemy) + " " + _enemy.getDamage(2 * this.hit());
     }
 
     @Override
-    public String counterAttack(Unit enemy) {
-        return super.counterAttack(enemy) + " " + enemy.getDamage(this.hit());
+    public String counterAttack(Unit _enemy) {
+        return super.counterAttack(_enemy) + " " + _enemy.getDamage(this.hit());
     }
 }

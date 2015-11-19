@@ -1,36 +1,38 @@
 package com.example.oliver.fightgame.models;
 
-import android.util.Log;
-
 import com.example.oliver.fightgame.RandomValue;
 
 /**
- * Created by oliver on 16.11.15.
+ * Unit class is abstract entity that represent a fighter with basic characteristics name, hp, strength and  mana.
+ * Unit can perform such kinds of actions as get damage, heal, hit etc.
  */
 public abstract class Unit {
     private String mName;
     private int mMaxHealth;
     private int mCurrentHealth;
     private int mStrength; // relate to hit power
-    private int mMana; // relate to regenerate power
+    private int mMana;     // relate to regenerate power
     private boolean isDead;
 
-
-    public Unit(String name, int hp, int strength, int mana) {
-        mName = name;
-        mMaxHealth = hp;
-        mCurrentHealth = hp;
-        mStrength = strength;
-        mMana = mana;
+    public Unit(String _name, int _hp, int _strength, int _mana) {
+        mName = _name;
+        mMaxHealth = _hp;
+        mCurrentHealth = _hp;
+        mStrength = _strength;
+        mMana = _mana;
     }
 
-    public String getDamage(int damage) {
+    /**
+     * Simulate getting this unit a damage
+     * @return unit state after getting {@param _damage} points of damage.
+     */
+    public String getDamage(int _damage) {
         if (isDead) return getClass().getSimpleName() + " " + mName + " is dead. ";
 
         String result;
-        if (this.mCurrentHealth > damage) {
-            this.mCurrentHealth -= damage;
-            result =  getClass().getSimpleName() + " " + mName + " lose " + damage + "hp, " + mCurrentHealth + "hp left. ";
+        if (this.mCurrentHealth > _damage) {
+            this.mCurrentHealth -= _damage;
+            result =  getClass().getSimpleName() + " " + mName + " lose " + _damage + "hp, " + mCurrentHealth + "hp left. ";
         } else {
             result = getClass().getSimpleName() + " " + mName + " lose " + mCurrentHealth + "hp. " + mName + " is DEAD. ";
             this.mCurrentHealth = 0;
@@ -39,16 +41,25 @@ public abstract class Unit {
        return result;
     }
 
-    public String attackEnemy(Unit enemy){
-        return  getClass().getSimpleName() + " " + mName + " attack " + enemy.getName() + ". ";
+    /**
+     * Deals damage to _enemy.
+     * @return information about attack
+     */
+    public String attackEnemy(Unit _enemy){
+        return  getClass().getSimpleName() + " " + mName + " attack " + _enemy.getName() + ". ";
     }
 
-    public String counterAttack(Unit enemy){
-        return  getClass().getSimpleName() + " " + mName + " counterattack " + enemy.getName()+ ". ";
+
+    /**
+     * @return information about counterattack
+     */
+    public String counterAttack(Unit _enemy){
+        return  getClass().getSimpleName() + " " + mName + " counterattack " + _enemy.getName()+ ". ";
     }
 
     /**
-     * Heal  (mana +/- random[0; mana/4)) hp
+     * Regenerate (mana +/- random[0; mana/4)) hp points
+     * @return information about process
      */
     public String regenerate() {
         if (isDead) return getClass().getSimpleName() + " " + mName + " is dead. ";
@@ -58,42 +69,47 @@ public abstract class Unit {
         return heal(mMana + sign * divergence);
     }
 
-    protected String heal(int health) {
-        int healHP = (mCurrentHealth + health < mMaxHealth) ? health : mMaxHealth - mCurrentHealth;
+    /**
+     * Heal _health points of unit health
+     * @param _health
+     * @return information about process
+     */
+    protected final String heal(int _health) {
+        int healHP = (mCurrentHealth + _health < mMaxHealth) ? _health : mMaxHealth - mCurrentHealth;
         mCurrentHealth += healHP;
         return getClass().getSimpleName() + " " + mName+  " heal " + healHP + "hp, " + mCurrentHealth + "hp left. ";
     }
 
-    public boolean isDead() {
+    public final boolean isDead() {
         return isDead;
     }
-    public String getName() {
+    public final String getName() {
         return mName;
     }
-    public int getHP() {
+    public final int getHP() {
         return mCurrentHealth;
     }
-
-    public int getMaxHP() {
+    public final int getMaxHP() {
         return mMaxHealth;
     }
 
-    /** Calculate hit power = strength +/- random[0; strength/4)
+    /**
+     * Calculate hit power = strength +/- random[0; strength/4)
      *
-     * @return hit strength
+     * @return hit value
      */
-    public int hit() {
+    public final int hit() {
         int sign = (RandomValue.nextInt() % 2 == 0) ? 1 : -1;
         int divergence = RandomValue.nextInt((int) (mStrength * 0.25));
         return (mStrength + sign * divergence);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Unit)) return false;
+    public boolean equals(Object _o) {
+        if (this == _o) return true;
+        if (!(_o instanceof Unit)) return false;
 
-        Unit unit = (Unit) o;
+        Unit unit = (Unit) _o;
 
         if (mMaxHealth != unit.mMaxHealth) return false;
         if (mCurrentHealth != unit.mCurrentHealth) return false;

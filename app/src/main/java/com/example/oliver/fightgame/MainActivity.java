@@ -3,21 +3,22 @@ package com.example.oliver.fightgame;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.example.oliver.fightgame.global.Constants;
 import com.example.oliver.fightgame.models.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity {
-    private TextView mLog;
+    private TextView tvLog;
     private TournamentTask mTournament;
-    private SeekBar mFightersCount;
+    private SeekBar sbFightersCount;
     private String[] mNames;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,14 +28,13 @@ public class MainActivity extends Activity {
     }
 
     private void initViews() {
-        final TextView progressText = (TextView) findViewById(R.id.tvFightersCount);
-        mLog = (TextView) findViewById(R.id.tvLog);
-        mLog.setMovementMethod(new ScrollingMovementMethod());
-        mFightersCount = ((SeekBar)findViewById(R.id.sbFightersCount));
-        mFightersCount.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        final TextView tvProgress = (TextView) findViewById(R.id.tvFightersCount);
+        tvLog = (TextView) findViewById(R.id.tvLog);
+        sbFightersCount = ((SeekBar)findViewById(R.id.sbFightersCount));
+        sbFightersCount.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progressText.setText(String.valueOf(progress + 2));
+                tvProgress.setText(String.valueOf(progress + Constants.MIN_FIGHTERS_COUNT));
             }
 
             @Override
@@ -49,15 +49,18 @@ public class MainActivity extends Activity {
         findViewById(R.id.startBattle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mLog.setText("New Battle Began!");
+                tvLog.setText("New Battle Began!");
 
-                int fightersCount = mFightersCount.getProgress() + 2;
+                int fightersCount = sbFightersCount.getProgress() + Constants.MIN_FIGHTERS_COUNT;
                 List<Unit> fighters = new ArrayList<>();
                 for (int i = 0; i < fightersCount; i++) {
-                    fighters.add(UnitFactory.getRandomUnit(mNames[i % mNames.length], 1000, 200, 50));
+                    fighters.add(UnitFactory.getRandomUnit(mNames[i % mNames.length],
+                            Constants.DEFAULT_UNIT_HEALTH,
+                            Constants.DEFAULT_UNIT_STRENGTH,
+                            Constants.DEFAULT_UNIT_MANA));
                 }
                 if (mTournament != null) mTournament.cancel(true);
-                mTournament = new TournamentTask(fighters, mLog);
+                mTournament = new TournamentTask(fighters, tvLog);
                 mTournament.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });

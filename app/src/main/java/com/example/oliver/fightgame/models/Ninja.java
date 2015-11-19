@@ -3,33 +3,34 @@ package com.example.oliver.fightgame.models;
 import com.example.oliver.fightgame.RandomValue;
 
 /**
- * Created by oliver on 16.11.15.
+ * Ninja unit has a chance to completely avoid attack.
  */
 public class Ninja extends Unit {
     // chance to evasion enemy attack
     private int mEvasionChance;
-    public Ninja(String name, int hp, int strength, int mana, int evasion) {
-        super(name, hp, strength, mana);
-        mEvasionChance = evasion;
+
+    public Ninja(String _name, int _hp, int _strength, int _mana, int _evasion) {
+        super(_name, _hp, _strength, _mana);
+        mEvasionChance = _evasion;
     }
 
 
     @Override
-    public String getDamage(int damage) {
+    public String getDamage(int _damage) {
         // Calculate if unit can avoid strike
         boolean avoidAttack = (RandomValue.nextInt() % 100 < mEvasionChance);
         return  avoidAttack ? getClass().getSimpleName() + " " + getName() + " avoid attack! " :
-                              super.getDamage(damage);
+                              super.getDamage(_damage);
     }
 
     @Override
-    public String attackEnemy(Unit enemy) {
-        return  super.attackEnemy(enemy) + " " + enemy.getDamage(this.hit());
+    public String attackEnemy(Unit _enemy) {
+        return  super.attackEnemy(_enemy) + " " + _enemy.getDamage(this.hit());
     }
 
     @Override
-    public String counterAttack(Unit enemy) {
-        return super.counterAttack(enemy) + " " + enemy.getDamage(this.hit() / 2);
+    public String counterAttack(Unit _enemy) {
+        return super.counterAttack(_enemy) + " " + _enemy.getDamage(this.hit() / 2);
     }
 
     @Override
