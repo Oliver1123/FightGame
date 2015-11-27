@@ -1,6 +1,6 @@
 package com.example.oliver.fightgame.models;
 
-import com.example.oliver.fightgame.RandomValue;
+import com.example.oliver.fightgame.global.RandomValue;
 
 /**
  * BladeMaster unit has a chance make double critical strike.

@@ -1,6 +1,7 @@
 package com.example.oliver.fightgame;
 
 import com.example.oliver.fightgame.global.Constants;
+import com.example.oliver.fightgame.global.RandomValue;
 import com.example.oliver.fightgame.models.Berserk;
 import com.example.oliver.fightgame.models.BladeMaster;
 import com.example.oliver.fightgame.models.Blocker;

@@ -1,6 +1,6 @@
 package com.example.oliver.fightgame.models;
 
-import com.example.oliver.fightgame.RandomValue;
+import com.example.oliver.fightgame.global.RandomValue;
 
 /**
  * Ninja unit has a chance to completely avoid attack.

@@ -1,6 +1,6 @@
 package com.example.oliver.fightgame.models;
 
-import com.example.oliver.fightgame.RandomValue;
+import com.example.oliver.fightgame.global.RandomValue;
 
 /**
  * Unit class is abstract entity that represent a fighter with basic characteristics name, hp, strength and  mana.
@@ -48,7 +48,6 @@ public abstract class Unit {
     public String attackEnemy(Unit _enemy){
         return  getClass().getSimpleName() + " " + mName + " attack " + _enemy.getName() + ". ";
     }
-
 
     /**
      * @return information about counterattack

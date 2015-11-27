@@ -1,4 +1,4 @@
-package com.example.oliver.fightgame;
+package com.example.oliver.fightgame.global;
 
 import java.util.Random;
 

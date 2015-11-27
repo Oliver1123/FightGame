@@ -1,8 +1,8 @@
 package com.example.oliver.fightgame;
 
 import android.os.AsyncTask;
-import android.widget.TextView;
 
+import com.example.oliver.fightgame.global.RandomValue;
 import com.example.oliver.fightgame.models.Unit;
 
 import java.lang.ref.WeakReference;
@@ -18,11 +18,11 @@ import java.util.concurrent.TimeUnit;
 public class TournamentTask extends AsyncTask<Void, String, Void> {
     private static final int PAUSE_MILLISECONDS = 1000;
     private final List<Unit> mFighters;
-    private WeakReference<TextView> mLog;
+    private WeakReference<CustomLogger> mLogger;
 
-    public TournamentTask(List<Unit> fighters, TextView log) {
-        mFighters = fighters;
-        mLog = new WeakReference<>(log);
+    public TournamentTask(List<Unit> _fighters, CustomLogger _logger) {
+        mFighters = _fighters;
+        mLogger = new WeakReference<>(_logger);
     }
     @Override
     protected Void doInBackground(Void... params) {
@@ -61,8 +61,7 @@ public class TournamentTask extends AsyncTask<Void, String, Void> {
     protected void onProgressUpdate(String... values) {
         super.onProgressUpdate(values);
 //        Log.d("tag", values[0]);
-        String currentProgress = mLog.get().getText().toString();
-        mLog.get().setText(currentProgress + "\n" + values[0]);
+        mLogger.get().log(values[0]);
     }
 
     /**

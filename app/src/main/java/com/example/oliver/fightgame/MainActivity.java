@@ -60,7 +60,8 @@ public class MainActivity extends Activity {
                             Constants.DEFAULT_UNIT_MANA));
                 }
                 if (mTournament != null) mTournament.cancel(true);
-                mTournament = new TournamentTask(fighters, tvLog);
+                mTournament = new TournamentTask(fighters, new CustomLogger(tvLog));
+//                mTournament = new TournamentTask(fighters, new CustomLogger("tournament"));
                 mTournament.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
