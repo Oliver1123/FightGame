@@ -1,18 +1,27 @@
 package com.example.oliver.fightgame.models;
 
+import android.util.Pair;
+
 import com.example.oliver.fightgame.global.RandomValue;
 
 /**
- * Unit class is abstract entity that represent a fighter with basic characteristics name, hp, strength and  mana.
- * Unit can perform such kinds of actions as get damage, heal, hit etc.
+ * Unit class is abstract entity that represent a fighter with basic characteristics name, hp, strength, mana, range and position.
+ * Unit can perform such kinds of actions as get damage, heal, hit, move etc.
  */
 public abstract class Unit {
+    public static final int DIRECTION_UP    = 0;
+    public static final int DIRECTION_DOWN  = 1;
+    public static final int DIRECTION_LEFT  = 2;
+    public static final int DIRECTION_RIGHT = 3;
+
     private String mName;
     private int mMaxHealth;
     private int mCurrentHealth;
-    private int mStrength; // relate to hit power
-    private int mMana;     // relate to regenerate power
+    private int mStrength;      // relate to hit power
+    private int mMana;          // relate to regenerate power
+    private int mRange = 1;     // distance where unit can attack enemy, default value 1
     private boolean isDead;
+    private Pair<Integer, Integer> mPosition;
 
     public Unit(String _name, int _hp, int _strength, int _mana) {
         mName = _name;
@@ -22,6 +31,31 @@ public abstract class Unit {
         mMana = _mana;
     }
 
+    public Pair<Integer, Integer> getPosition() {
+        return mPosition;
+    }
+
+    public void setPosition(Pair<Integer, Integer> _unitPosition) {
+        mPosition = _unitPosition;
+    }
+
+    /**
+     * @return distance where unit can attack enemy, default value 1
+     */
+    public int getRange() {
+        return mRange;
+    }
+
+    /**
+     * Set unit given value as unit range
+     * @throws IllegalArgumentException
+     *                if value < 1
+     */
+    public void setRange(int _range) {
+        if (_range < 1)
+            throw new IllegalArgumentException("Range must be positive");
+        mRange = _range;
+    }
     /**
      * Simulate getting this unit a damage
      * @return unit state after getting {@param _damage} points of damage.
@@ -91,6 +125,12 @@ public abstract class Unit {
     public final int getMaxHP() {
         return mMaxHealth;
     }
+    public final int getStrength() {
+        return mStrength;
+    }
+    public final int getMana() {
+        return mMana;
+    }
 
     /**
      * Calculate hit power = strength +/- random[0; strength/4)
@@ -101,6 +141,38 @@ public abstract class Unit {
         int sign = (RandomValue.nextInt() % 2 == 0) ? 1 : -1;
         int divergence = RandomValue.nextInt((int) (mStrength * 0.25));
         return (mStrength + sign * divergence);
+    }
+
+    /**
+     * @return true if enemy is close enough to attack, false otherwise
+     */
+    public boolean canAttackEnemy(Unit _enemy) {
+        return Math.round(getDistance(getPosition(), _enemy.getPosition())) <= mRange;
+    }
+
+    /**
+     * Move unit to specified direction
+     */
+    public void move(int _direction){
+        Pair<Integer, Integer> newPosition;
+        switch (_direction) {
+            case DIRECTION_UP:
+                newPosition = new Pair<>(mPosition.first - 1, mPosition.second);
+                break;
+            case DIRECTION_DOWN:
+                newPosition = new Pair<>(mPosition.first + 1, mPosition.second);
+                break;
+            case DIRECTION_LEFT:
+                newPosition = new Pair<>(mPosition.first, mPosition.second - 1);
+                break;
+            case DIRECTION_RIGHT:
+                newPosition = new Pair<>(mPosition.first, mPosition.second + 1);
+                break;
+            default:
+                throw new IllegalArgumentException("Direction value must be one of defined direction constants");
+
+        }
+        mPosition = newPosition;
     }
 
     @Override
@@ -135,5 +207,10 @@ public abstract class Unit {
                 ", hp: " + mCurrentHealth +
                 ", strength: " + mStrength +
                 ", mana: " + mMana;
+    }
+
+    private double getDistance(Pair<Integer, Integer> _pointA, Pair<Integer, Integer> _pointB) {
+        return Math.sqrt(Math.pow((_pointB.first - _pointA.first), 2) +
+                         Math.pow((_pointB.second - _pointA.second), 2));
     }
 }

@@ -13,7 +13,8 @@ public class Knight extends Unit {
 
     @Override
     public String getDamage(int _damage) {
-       return super.getDamage(_damage - mArmor);
+       int realDamage = (_damage > mArmor) ? _damage - mArmor : 0;
+        return super.getDamage(realDamage);
     }
 
     @Override
