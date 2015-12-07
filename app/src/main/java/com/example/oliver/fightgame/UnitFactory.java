@@ -21,8 +21,8 @@ public class UnitFactory {
         Unit unit;
         switch (unitNumber) {
             case 0:
-                // default armor may be [0; hp/5]
-                unit = createKnight(_name, _hp, _strength, _mana, RandomValue.nextInt(_hp / 5));
+                // default armor may be [0; strength/2]
+                unit = createKnight(_name, _hp, _strength, _mana, RandomValue.nextInt(_strength / 2));
                 break;
             case 1:
                 unit = createBerserk(_name, _hp, _strength, _mana);
