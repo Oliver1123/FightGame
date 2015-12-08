@@ -1,5 +1,6 @@
 # FightGame
 Unit
+
 Main abstract program entity, that represent some king of fighter
 Has parameters: health, strength, mana, range and position.
 Can do some action: get damage, attack, hit  regenerate, counterattack. Each action returns text description of itself. Also can find out if unit can attack enemy.
@@ -7,11 +8,15 @@ Can move in some of specified direction.
 
 Rules:
      - if health = 0   - dead
-    - can regenerate, heal [mana +/- random(0; mana/4)]  health points. But can not recover more than the initial level.
-    - can hit. Hit power calculate as [strength +/- random (0; strength/4] points.
-    - can counterattack opponent with half a power.
-    - can attack if distance between unit and enemy is less as range.
-
+     - can regenerate, heal [mana +/- random(0; mana/4)]  health points. But can not recover more than the initial level.
+     
+     - can hit. Hit power calculate as [strength +/- random (0; strength/4] points.
+     
+     - can counterattack opponent with half a power.
+     
+     - can attack if distance between unit and enemy is less as range.
+     
+     
 Berserk extends Unit
 Fighter can make double damage but also get a double damage.
 
