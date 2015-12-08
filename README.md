@@ -17,22 +17,22 @@ Rules:
      - can attack if distance between unit and enemy is less as range.
      
      
-Berserk extends Unit
+Berserk extends Unit.
 Fighter can make double damage but also get a double damage.
 
-BladeMaster extends Unit
+BladeMaster extends Unit.
 Extra parameter critical strike chance.
 Fighter has a chance to make double strike.
 
-Blocker extends Unit
+Blocker extends Unit.
 Extra parameter block percents.
 Fighter can block [block percent]% points of damage.
 
-Knight extends Unit
+Knight extends Unit.
 Extra parameter armor.
-Fighter can block [armor] points of damage
+Fighter can block [armor] points of damage.
 
-Ninja extends Unit
+Ninja extends Unit.
 Extra parameter evasion chance.
 Fighter has a chance to avoid attack.
 
